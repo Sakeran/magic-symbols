@@ -57,13 +57,18 @@ ANSI_SYNTAX = {
   "|W": UNHILITE + WHITE
 };
 
-const ANSI_REGEX = Object.entries(ANSI_SYNTAX).map(([symbol, code]) => [
-  new RegExp(`\\${symbol}`, "g"),
-  code
-]);
+const SYNTAX_ESCAPE = "||";
+
+const ANSI_REGEX = new RegExp(
+  `(${Object.keys(ANSI_SYNTAX)
+    .map(k => "\\" + k)
+    .join("|")})`,
+  "g"
+);
 
 module.exports = {
   ANSI_DEFINITIONS,
   ANSI_SYNTAX,
-  ANSI_REGEX
+  ANSI_REGEX,
+  SYNTAX_ESCAPE
 };

@@ -1,14 +1,14 @@
 "use strict";
 
-const { ANSI_REGEX: AR } = require("./definitions");
+const { ANSI_SYNTAX, ANSI_REGEX, SYNTAX_ESCAPE } = require("./definitions");
 
-function parse_ansi(string) {
-  for (const [re, code] of AR) {
-    string = string.replace(re, code);
-  }
-  return string;
+function parseAnsi(string) {
+  return string
+    .split(SYNTAX_ESCAPE)
+    .map(ss => ss.replace(ANSI_REGEX, m => ANSI_SYNTAX[m]))
+    .join("|");
 }
 
 module.exports = {
-  parse_ansi
+  parseAnsi
 };
