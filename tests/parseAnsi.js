@@ -72,6 +72,20 @@ describe("ansi-parse", () => {
     expect(pstr).to.be("|R|nhello " + ANSI.HILITE + ANSI.YELLOW + "wo|urld");
   });
 
+  it("can parse normal background tags", () => {
+    const str = "|[Rhello world";
+    const pstr = parseAnsi(str);
+    expect(pstr).to.be(ANSI.BACK_RED + "hello world");
+  });
+
+  it("can parse multiple normal backround tags", () => {
+    const str = "|[R|[Yhello |[Xworld";
+    const pstr = parseAnsi(str);
+    expect(pstr).to.be(
+      ANSI.BACK_RED + ANSI.BACK_YELLOW + "hello " + ANSI.BACK_BLACK + "world"
+    );
+  });
+
   it("correctly parses all defined ANSI tags", () => {
     for (const [tag, code] of Object.entries(ANSI_SYNTAX)) {
       const parsedTag = parseAnsi(tag);

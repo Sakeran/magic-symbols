@@ -13,7 +13,16 @@ const YELLOW = "\033[33m";
 const BLUE = "\033[34m";
 const MAGENTA = "\033[35m";
 const CYAN = "\033[36m";
-const WHITE = "\033[36m";
+const WHITE = "\033[37m";
+
+const BACK_BLACK = "\033[40m";
+const BACK_RED = "\033[41m";
+const BACK_GREEN = "\033[42m";
+const BACK_YELLOW = "\033[43m";
+const BACK_BLUE = "\033[44m";
+const BACK_MAGENTA = "\033[45m";
+const BACK_CYAN = "\033[46m";
+const BACK_WHITE = "\033[47m";
 
 const ANSI_DEFINITIONS = {
   RESET,
@@ -28,7 +37,15 @@ const ANSI_DEFINITIONS = {
   BLUE,
   MAGENTA,
   CYAN,
-  WHITE
+  WHITE,
+  BACK_BLACK,
+  BACK_RED,
+  BACK_GREEN,
+  BACK_YELLOW,
+  BACK_BLUE,
+  BACK_MAGENTA,
+  BACK_CYAN,
+  BACK_WHITE
 };
 
 ANSI_SYNTAX = {
@@ -54,14 +71,23 @@ ANSI_SYNTAX = {
   "|B": UNHILITE + BLUE,
   "|M": UNHILITE + MAGENTA,
   "|C": UNHILITE + CYAN,
-  "|W": UNHILITE + WHITE
+  "|W": UNHILITE + WHITE,
+
+  "|[X": BACK_BLACK,
+  "|[R": BACK_RED,
+  "|[G": BACK_GREEN,
+  "|[Y": BACK_YELLOW,
+  "|[B": BACK_BLUE,
+  "|[M": BACK_MAGENTA,
+  "|[C": BACK_CYAN,
+  "|[W": BACK_WHITE,
 };
 
 const SYNTAX_ESCAPE = "||";
 
 const ANSI_REGEX = new RegExp(
   `(${Object.keys(ANSI_SYNTAX)
-    .map(k => "\\" + k)
+    .map(k => "\\" + k.replace('[', '\\['))
     .join("|")})`,
   "g"
 );
