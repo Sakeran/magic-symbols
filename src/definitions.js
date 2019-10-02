@@ -1,19 +1,19 @@
 // ANSI / xterm256 definitions
 
-const RESET = "\u001b[0m";
-const HILITE = "\u001b[1m";
-const UNHILITE = "\u001b[22m";
-const UNDERLINE = "\u001b[4m";
-const REVERSE = "\u001b[1m";
+const RESET = "\033[0m";
+const HILITE = "\033[1m";
+const UNHILITE = "\033[22m";
+const UNDERLINE = "\033[4m";
+const REVERSE = "\033[1m";
 
-const BLACK = "\u001b[30m";
-const RED = "\u001b[31m";
-const GREEN = "\u001b[32m";
-const YELLOW = "\u001b[33m";
-const BLUE = "\u001b[34m";
-const MAGENTA = "\u001b[35m";
-const CYAN = "\u001b[36m";
-const WHITE = "\u001b[36m";
+const BLACK = "\033[30m";
+const RED = "\033[31m";
+const GREEN = "\033[32m";
+const YELLOW = "\033[33m";
+const BLUE = "\033[34m";
+const MAGENTA = "\033[35m";
+const CYAN = "\033[36m";
+const WHITE = "\033[36m";
 
 const ANSI_DEFINITIONS = {
   RESET,
