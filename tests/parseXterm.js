@@ -75,7 +75,7 @@ describe("getGrayscaleXterm", () => {
   });
 });
 
-xdescribe("xterm-parse", () => {
+describe("xterm-parse", () => {
   it("returns an untagged string unmodified", () => {
     const str = "hello world";
     const pstr = parseXterm(str);

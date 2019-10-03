@@ -94,10 +94,15 @@ const ANSI_REGEX = new RegExp(
   "g"
 );
 
+XTERM_COLOR_REGEX = /\|\[?([0-5])([0-5])([0-5])/g;
+XTERM_GRAYSCALE_REGEX = /\|\[?=([a-z])/g;
+
 module.exports = {
   ANSI_ESCAPE,
   ANSI_DEFINITIONS,
   ANSI_SYNTAX,
+  SYNTAX_ESCAPE,
   ANSI_REGEX,
-  SYNTAX_ESCAPE
+  XTERM_COLOR_REGEX,
+  XTERM_GRAYSCALE_REGEX
 };
