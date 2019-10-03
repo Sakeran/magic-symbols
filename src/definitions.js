@@ -86,6 +86,7 @@ ANSI_SYNTAX = {
 };
 
 const SYNTAX_ESCAPE = "||";
+const SYNTAX_UNESCAPE = "|";
 
 const ANSI_REGEX = new RegExp(
   `(${Object.keys(ANSI_SYNTAX)
@@ -102,6 +103,7 @@ module.exports = {
   ANSI_DEFINITIONS,
   ANSI_SYNTAX,
   SYNTAX_ESCAPE,
+  SYNTAX_UNESCAPE,
   ANSI_REGEX,
   XTERM_COLOR_REGEX,
   XTERM_GRAYSCALE_REGEX

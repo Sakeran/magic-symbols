@@ -4,10 +4,18 @@ const {
   ANSI_SYNTAX,
   ANSI_REGEX,
   SYNTAX_ESCAPE,
+  SYNTAX_UNESCAPE,
   ANSI_ESCAPE,
   XTERM_COLOR_REGEX,
   XTERM_GRAYSCALE_REGEX
 } = require("./definitions");
+
+function parse(string) {
+  return string
+    .split(SYNTAX_ESCAPE)
+    .map(ss => parseXterm(parseAnsi(ss)))
+    .join(SYNTAX_UNESCAPE);
+}
 
 function parseAnsi(string) {
   return string.replace(ANSI_REGEX, m => ANSI_SYNTAX[m]);
@@ -51,6 +59,7 @@ function getGrayscaleXterm(letter, background = false) {
 }
 
 module.exports = {
+  parse,
   parseAnsi,
   parseXterm,
   getRGBXterm,
