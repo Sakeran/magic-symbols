@@ -1,5 +1,7 @@
 // ANSI / xterm256 definitions
 
+const ANSI_ESCAPE = "\033";
+
 const RESET = "\033[0m";
 const HILITE = "\033[1m";
 const UNHILITE = "\033[22m";
@@ -80,19 +82,20 @@ ANSI_SYNTAX = {
   "|[B": BACK_BLUE,
   "|[M": BACK_MAGENTA,
   "|[C": BACK_CYAN,
-  "|[W": BACK_WHITE,
+  "|[W": BACK_WHITE
 };
 
 const SYNTAX_ESCAPE = "||";
 
 const ANSI_REGEX = new RegExp(
   `(${Object.keys(ANSI_SYNTAX)
-    .map(k => "\\" + k.replace('[', '\\['))
+    .map(k => "\\" + k.replace("[", "\\["))
     .join("|")})`,
   "g"
 );
 
 module.exports = {
+  ANSI_ESCAPE,
   ANSI_DEFINITIONS,
   ANSI_SYNTAX,
   ANSI_REGEX,
