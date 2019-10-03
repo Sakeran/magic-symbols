@@ -10,10 +10,7 @@ const {
 } = require("./definitions");
 
 function parseAnsi(string) {
-  return string
-    .split(SYNTAX_ESCAPE)
-    .map(ss => ss.replace(ANSI_REGEX, m => ANSI_SYNTAX[m]))
-    .join("|");
+  return string.replace(ANSI_REGEX, m => ANSI_SYNTAX[m]);
 }
 
 function parseXterm(string) {

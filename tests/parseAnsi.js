@@ -54,24 +54,6 @@ describe("ansi-parse", () => {
     expect(pstr).to.be(ANSI.UNDERLINE + "hello " + ANSI.RESET + "world");
   });
 
-  it("correctly escapes tags", () => {
-    const str = "||rhello world";
-    const pstr = parseAnsi(str);
-    expect(pstr).to.be("|rhello world");
-  });
-
-  it("correctly espaces multiple tags", () => {
-    const str = "||R||nhello ||Xworld";
-    const pstr = parseAnsi(str);
-    expect(pstr).to.be("|R|nhello |Xworld");
-  });
-
-  it("can parse and escape tags", () => {
-    const str = "||R||nhello |ywo||urld";
-    const pstr = parseAnsi(str);
-    expect(pstr).to.be("|R|nhello " + ANSI.HILITE + ANSI.YELLOW + "wo|urld");
-  });
-
   it("can parse normal background tags", () => {
     const str = "|[Rhello world";
     const pstr = parseAnsi(str);
