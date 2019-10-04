@@ -85,11 +85,29 @@ ANSI_SYNTAX = {
   "|[W": BACK_WHITE
 };
 
+BRIGHT_BG_SUBSTITUTIONS = {
+  "|[x": ANSI_ESCAPE + `[48;5;${102}m`,
+  "|[r": ANSI_ESCAPE + `[48;5;${196}m`,
+  "|[g": ANSI_ESCAPE + `[48;5;${46}m`,
+  "|[y": ANSI_ESCAPE + `[48;5;${226}m`,
+  "|[b": ANSI_ESCAPE + `[48;5;${21}m`,
+  "|[m": ANSI_ESCAPE + `[48;5;${201}m`,
+  "|[c": ANSI_ESCAPE + `[48;5;${51}m`,
+  "|[w": ANSI_ESCAPE + `[48;5;${231}m`
+};
+
 const SYNTAX_ESCAPE = "||";
 const SYNTAX_UNESCAPE = "|";
 
 const ANSI_REGEX = new RegExp(
   `(${Object.keys(ANSI_SYNTAX)
+    .map(k => "\\" + k.replace("[", "\\["))
+    .join("|")})`,
+  "g"
+);
+
+const BRIGHT_BG_XTERM_SUB_REGEX = new RegExp(
+  `(${Object.keys(BRIGHT_BG_SUBSTITUTIONS)
     .map(k => "\\" + k.replace("[", "\\["))
     .join("|")})`,
   "g"
@@ -102,9 +120,11 @@ module.exports = {
   ANSI_ESCAPE,
   ANSI_DEFINITIONS,
   ANSI_SYNTAX,
+  BRIGHT_BG_SUBSTITUTIONS,
   SYNTAX_ESCAPE,
   SYNTAX_UNESCAPE,
   ANSI_REGEX,
+  BRIGHT_BG_XTERM_SUB_REGEX,
   XTERM_COLOR_REGEX,
   XTERM_GRAYSCALE_REGEX
 };

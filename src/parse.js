@@ -7,7 +7,9 @@ const {
   SYNTAX_UNESCAPE,
   ANSI_ESCAPE,
   XTERM_COLOR_REGEX,
-  XTERM_GRAYSCALE_REGEX
+  XTERM_GRAYSCALE_REGEX,
+  BRIGHT_BG_SUBSTITUTIONS,
+  BRIGHT_BG_XTERM_SUB_REGEX
 } = require("./definitions");
 
 function parse(string) {
@@ -30,7 +32,8 @@ function parseXterm(string) {
     .replace(XTERM_GRAYSCALE_REGEX, (m, l) => {
       const background = m[1] == "[";
       return getGrayscaleXterm(l, background);
-    });
+    })
+    .replace(BRIGHT_BG_XTERM_SUB_REGEX, m => BRIGHT_BG_SUBSTITUTIONS[m]);
 }
 
 function getRGBXterm(r, g, b, background = false) {

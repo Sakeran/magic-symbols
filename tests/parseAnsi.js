@@ -68,6 +68,12 @@ describe("ansi-parse", () => {
     );
   });
 
+  it("doesn't parse bright background tags", () => {
+    const str = "|[rhello |[xworld";
+    const pstr = parseAnsi(str);
+    expect(pstr).to.be("|[rhello |[xworld");
+  });
+
   it("correctly parses all defined ANSI tags", () => {
     for (const [tag, code] of Object.entries(ANSI_SYNTAX)) {
       const parsedTag = parseAnsi(tag);

@@ -116,4 +116,14 @@ describe("parse", () => {
     expect(pstr).to.contain("lo |rwor");
     expect(pstr).to.contain(ANSI.HILITE + ANSI.RED + "ld");
   });
+
+  it("converts bright ansi backgrounds to xterm by default", () => {
+    const str = "|[mhello world";
+    const pstr = parse(str);
+    expect(pstr).to.contain(`[48;5;`);
+    expect(pstr).to.contain(xColor(16 + 36 * 5 + 6 * 0 + 5));
+    expect(pstr).to.not.contain(ANSI.HILITE);
+    expect(pstr).to.not.contain(ANSI.MAGENTA);
+    expect(pstr).to.contain("hello world");
+  });
 });
