@@ -12,10 +12,13 @@ const {
   BRIGHT_BG_XTERM_SUB_REGEX
 } = require("./definitions");
 
-function parse(string) {
+const { XTERM_FALLBACKS } = require("./xtermFallbacks");
+
+function parse(string, xterm = true) {
+  const handleXterm = xterm ? parseXterm : parseXtermFallback;
   return string
     .split(SYNTAX_ESCAPE)
-    .map(ss => parseXterm(parseAnsi(ss)))
+    .map(ss => handleXterm(parseAnsi(ss)))
     .join(SYNTAX_UNESCAPE);
 }
 
@@ -34,6 +37,13 @@ function parseXterm(string) {
       return getGrayscaleXterm(l, background);
     })
     .replace(BRIGHT_BG_XTERM_SUB_REGEX, m => BRIGHT_BG_SUBSTITUTIONS[m]);
+}
+
+function parseXtermFallback(string) {
+  return string
+    .replace(XTERM_COLOR_REGEX, m => XTERM_FALLBACKS.get(m))
+    .replace(XTERM_GRAYSCALE_REGEX, m => XTERM_FALLBACKS.get(m))
+    .replace(BRIGHT_BG_XTERM_SUB_REGEX, m => XTERM_FALLBACKS.get(m));
 }
 
 function getRGBXterm(r, g, b, background = false) {
@@ -65,6 +75,7 @@ module.exports = {
   parse,
   parseAnsi,
   parseXterm,
+  parseXtermFallback,
   getRGBXterm,
   getGrayscaleXterm
 };

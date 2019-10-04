@@ -126,4 +126,26 @@ describe("parse", () => {
     expect(pstr).to.not.contain(ANSI.MAGENTA);
     expect(pstr).to.contain("hello world");
   });
+
+  it("can fall back to ansi when xterm is turned off", () => {
+    let str = "|500hello world";
+    let pstr = parse(str, false);
+    expect(pstr).to.not.contain(`[38;5;`);
+    expect(pstr).to.be(ANSI.HILITE + ANSI.RED + "hello world");
+
+    str = "|[005hello world";
+    pstr = parse(str, false);
+    expect(pstr).to.not.contain(`[48;5;`);
+    expect(pstr).to.be(ANSI.BACK_BLUE + "hello world");
+
+    str = "|=fhello world";
+    pstr = parse(str, false);
+    expect(pstr).to.not.contain(`[38;5;`);
+    expect(pstr).to.be(ANSI.HILITE + ANSI.BLACK + "hello world");
+
+    str = "|[=yhello world";
+    pstr = parse(str, false);
+    expect(pstr).to.not.contain(`[48;5;`);
+    expect(pstr).to.be(ANSI.BACK_WHITE + "hello world");
+  });
 });
