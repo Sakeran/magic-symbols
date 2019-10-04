@@ -62,7 +62,7 @@ ANSI_SYNTAX = {
   "|g": HILITE + GREEN,
   "|y": HILITE + YELLOW,
   "|b": HILITE + BLUE,
-  "|m": MAGENTA,
+  "|m": HILITE + MAGENTA,
   "|c": HILITE + CYAN,
   "|w": HILITE + WHITE,
 
