@@ -1,30 +1,32 @@
-// ANSI / xterm256 definitions
+'use strict';
 
-const ANSI_ESCAPE = "\033";
+// Base Definitions
 
-const RESET = "\033[0m";
-const HILITE = "\033[1m";
-const UNHILITE = "\033[22m";
-const UNDERLINE = "\033[4m";
-const REVERSE = "\033[1m";
+const ESCAPE = "\u001b";
 
-const BLACK = "\033[30m";
-const RED = "\033[31m";
-const GREEN = "\033[32m";
-const YELLOW = "\033[33m";
-const BLUE = "\033[34m";
-const MAGENTA = "\033[35m";
-const CYAN = "\033[36m";
-const WHITE = "\033[37m";
+const RESET = "\u001b[0m";
+const HILITE = "\u001b[1m";
+const UNHILITE = "\u001b[22m";
+const UNDERLINE = "\u001b[4m";
+const REVERSE = "\u001b[1m";
 
-const BACK_BLACK = "\033[40m";
-const BACK_RED = "\033[41m";
-const BACK_GREEN = "\033[42m";
-const BACK_YELLOW = "\033[43m";
-const BACK_BLUE = "\033[44m";
-const BACK_MAGENTA = "\033[45m";
-const BACK_CYAN = "\033[46m";
-const BACK_WHITE = "\033[47m";
+const BLACK = "\u001b[30m";
+const RED = "\u001b[31m";
+const GREEN = "\u001b[32m";
+const YELLOW = "\u001b[33m";
+const BLUE = "\u001b[34m";
+const MAGENTA = "\u001b[35m";
+const CYAN = "\u001b[36m";
+const WHITE = "\u001b[37m";
+
+const BACK_BLACK = "\u001b[40m";
+const BACK_RED = "\u001b[41m";
+const BACK_GREEN = "\u001b[42m";
+const BACK_YELLOW = "\u001b[43m";
+const BACK_BLUE = "\u001b[44m";
+const BACK_MAGENTA = "\u001b[45m";
+const BACK_CYAN = "\u001b[46m";
+const BACK_WHITE = "\u001b[47m";
 
 const ANSI_DEFINITIONS = {
   RESET,
@@ -54,7 +56,7 @@ const SYNTAX_ESCAPE = "||";
 const SYNTAX_UNESCAPE = "|";
 
 module.exports = {
-  ANSI_ESCAPE,
+  ESCAPE,
   ANSI_DEFINITIONS,
   SYNTAX_ESCAPE,
   SYNTAX_UNESCAPE
