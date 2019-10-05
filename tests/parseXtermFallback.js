@@ -1,8 +1,9 @@
 const expect = require("expect.js");
-const { ANSI_DEFINITIONS: ANSI } = require("../src/definitions");
+const { ANSI_DEFINITIONS: ANSI, ESCAPE } = require("../src/definitions");
 const { parseXtermFallback } = require("../src/parse");
 
-const xColor = number => `;${number}m`;
+// Test helper for generating an xterm sequence.
+const xterm = (number, bg = false) => `${ESCAPE}[${bg ? 4 : 3}8;5;${number}m`;
 
 describe("xterm-fallback-parse", () => {
   it("returns a string result", () => {
@@ -14,8 +15,7 @@ describe("xterm-fallback-parse", () => {
   it("doesn't return xterm sequences", () => {
     const str = "|500hello world";
     const pstr = parseXtermFallback(str);
-    expect(pstr).to.not.contain("38;5;");
-    expect(pstr).to.not.contain(xColor(16 + 36 * 5 + 6 * 0 + 0));
+    expect(pstr).to.not.contain(xterm(16 + 36 * 5 + 6 * 0 + 0));
   });
 
   it("falls back to ansi when given xterm", () => {
@@ -470,7 +470,7 @@ describe("xterm-fallback-parse", () => {
     str = "|[=fhello world";
     pstr = parseXtermFallback(str);
     expect(pstr).to.be(ANSI.BACK_BLACK + "hello world");
-    
+
     str = "|[=ghello world";
     pstr = parseXtermFallback(str);
     expect(pstr).to.be(ANSI.BACK_BLACK + "hello world");
@@ -555,10 +555,10 @@ describe("xterm-fallback-parse", () => {
   it("parses bright ANSI backgrounds and falls back", () => {
     let str = "|[rhello world";
     let pstr = parseXtermFallback(str);
-    expect(pstr).to.be(ANSI.BACK_RED + 'hello world');
-    
-    str = "hello |[yworld"
+    expect(pstr).to.be(ANSI.BACK_RED + "hello world");
+
+    str = "hello |[yworld";
     pstr = parseXtermFallback(str);
-    expect(pstr).to.be('hello ' + ANSI.BACK_YELLOW + 'world');
+    expect(pstr).to.be("hello " + ANSI.BACK_YELLOW + "world");
   });
 });
