@@ -1,6 +1,6 @@
 "use strict";
 
-const { ANSI_DEFINITIONS: ANSI } = require("./definitions");
+const { ANSI_DEFINITIONS: ANSI } = require("../definitions");
 
 // defines ansi fallbacks for xterm codes when xterm is unavailable
 

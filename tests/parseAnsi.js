@@ -1,7 +1,8 @@
 const expect = require("expect.js");
 
 const { parseAnsi } = require("../src/parse");
-const { ANSI_DEFINITIONS: ANSI, ANSI_SYNTAX } = require("../src/definitions");
+const { ANSI_DEFINITIONS: ANSI } = require("../src/definitions");
+const { ANSI_SEQUENCES } = require("../src/mappings/ansi");
 
 describe("ansi-parse", () => {
   it("returns an untagged string unmodified", () => {
@@ -75,7 +76,7 @@ describe("ansi-parse", () => {
   });
 
   it("correctly parses all defined ANSI tags", () => {
-    for (const [tag, code] of Object.entries(ANSI_SYNTAX)) {
+    for (const [tag, code] of ANSI_SEQUENCES.entries()) {
       const parsedTag = parseAnsi(tag);
       expect(parsedTag).to.be(code);
     }

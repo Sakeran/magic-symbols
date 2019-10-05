@@ -1,6 +1,7 @@
 const expect = require("expect.js");
 const { ANSI_DEFINITIONS: ANSI } = require("../src/definitions");
-const { parseXterm, getRGBXterm, getGrayscaleXterm } = require("../src/parse");
+const { parseXterm } = require("../src/parse");
+const { getRGBXterm, getGrayscaleXterm } = require("../src/mappings/xterm");
 
 // It's painful to exhaustively list all 256 colors with variables,
 // so we'll just check that the following sequence (with some number)

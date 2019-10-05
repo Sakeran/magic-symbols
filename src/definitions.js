@@ -50,81 +50,12 @@ const ANSI_DEFINITIONS = {
   BACK_WHITE
 };
 
-ANSI_SYNTAX = {
-  "|n": RESET,
-  "|u": UNDERLINE,
-
-  "|h": HILITE,
-  "|H": UNHILITE,
-
-  "|x": HILITE + BLACK,
-  "|r": HILITE + RED,
-  "|g": HILITE + GREEN,
-  "|y": HILITE + YELLOW,
-  "|b": HILITE + BLUE,
-  "|m": HILITE + MAGENTA,
-  "|c": HILITE + CYAN,
-  "|w": HILITE + WHITE,
-
-  "|X": UNHILITE + BLACK,
-  "|R": UNHILITE + RED,
-  "|G": UNHILITE + GREEN,
-  "|Y": UNHILITE + YELLOW,
-  "|B": UNHILITE + BLUE,
-  "|M": UNHILITE + MAGENTA,
-  "|C": UNHILITE + CYAN,
-  "|W": UNHILITE + WHITE,
-
-  "|[X": BACK_BLACK,
-  "|[R": BACK_RED,
-  "|[G": BACK_GREEN,
-  "|[Y": BACK_YELLOW,
-  "|[B": BACK_BLUE,
-  "|[M": BACK_MAGENTA,
-  "|[C": BACK_CYAN,
-  "|[W": BACK_WHITE
-};
-
-BRIGHT_BG_SUBSTITUTIONS = {
-  "|[x": ANSI_ESCAPE + `[48;5;${102}m`,
-  "|[r": ANSI_ESCAPE + `[48;5;${196}m`,
-  "|[g": ANSI_ESCAPE + `[48;5;${46}m`,
-  "|[y": ANSI_ESCAPE + `[48;5;${226}m`,
-  "|[b": ANSI_ESCAPE + `[48;5;${21}m`,
-  "|[m": ANSI_ESCAPE + `[48;5;${201}m`,
-  "|[c": ANSI_ESCAPE + `[48;5;${51}m`,
-  "|[w": ANSI_ESCAPE + `[48;5;${231}m`
-};
-
 const SYNTAX_ESCAPE = "||";
 const SYNTAX_UNESCAPE = "|";
-
-const ANSI_REGEX = new RegExp(
-  `(${Object.keys(ANSI_SYNTAX)
-    .map(k => "\\" + k.replace("[", "\\["))
-    .join("|")})`,
-  "g"
-);
-
-const BRIGHT_BG_XTERM_SUB_REGEX = new RegExp(
-  `(${Object.keys(BRIGHT_BG_SUBSTITUTIONS)
-    .map(k => "\\" + k.replace("[", "\\["))
-    .join("|")})`,
-  "g"
-);
-
-XTERM_COLOR_REGEX = /\|\[?([0-5])([0-5])([0-5])/g;
-XTERM_GRAYSCALE_REGEX = /\|\[?=([a-z])/g;
 
 module.exports = {
   ANSI_ESCAPE,
   ANSI_DEFINITIONS,
-  ANSI_SYNTAX,
-  BRIGHT_BG_SUBSTITUTIONS,
   SYNTAX_ESCAPE,
-  SYNTAX_UNESCAPE,
-  ANSI_REGEX,
-  BRIGHT_BG_XTERM_SUB_REGEX,
-  XTERM_COLOR_REGEX,
-  XTERM_GRAYSCALE_REGEX
+  SYNTAX_UNESCAPE
 };
