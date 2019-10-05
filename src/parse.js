@@ -21,6 +21,14 @@ function parse(string, xterm = true) {
     .join(SYNTAX_UNESCAPE);
 }
 
+function strip(string) {
+  return string
+    .replace(ANSI_REGEX, "")
+    .replace(XTERM_COLOR_REGEX, "")
+    .replace(XTERM_GRAYSCALE_REGEX, "")
+    .replace(XTERM_BGSUB_REGEX, "");
+}
+
 function parseAnsi(string) {
   return string.replace(ANSI_REGEX, m => ANSI_SEQUENCES.get(m));
 }
@@ -41,6 +49,7 @@ function parseXtermFallback(string) {
 
 module.exports = {
   parse,
+  strip,
   parseAnsi,
   parseXterm,
   parseXtermFallback
