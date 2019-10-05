@@ -22,15 +22,6 @@ describe("getRGBXterm", () => {
     expect(getRGBXterm(5, 5, 5)).to.contain(xColor(16 + 36 * 5 + 6 * 5 + 5));
   });
 
-  it("returns white when given an invalid color", () => {
-    expect(getRGBXterm(-1, 0, 0)).to.contain(xColor(7));
-    expect(getRGBXterm(0, -1, 0)).to.contain(xColor(7));
-    expect(getRGBXterm(0, 0, -1)).to.contain(xColor(7));
-    expect(getRGBXterm(6, 0, 0)).to.contain(xColor(7));
-    expect(getRGBXterm(0, 6, 0)).to.contain(xColor(7));
-    expect(getRGBXterm(0, 0, 6)).to.contain(xColor(7));
-  });
-
   it("can return a foreground sequence", () => {
     expect(getRGBXterm(0, 0, 0, false)).to.contain(`[38;5;`);
     expect(getRGBXterm(1, 2, 3, false)).to.contain(`[38;5;`);
@@ -55,13 +46,6 @@ describe("getGrayscaleXterm", () => {
     expect(getGrayscaleXterm("b")).to.contain(xColor(134 + "b".charCodeAt(0)));
     expect(getGrayscaleXterm("y")).to.contain(xColor(134 + "y".charCodeAt(0)));
     expect(getGrayscaleXterm("z")).to.contain(xColor(231));
-  });
-
-  it("returns white when given an invalid value", () => {
-    expect(getGrayscaleXterm("aa")).to.contain(xColor(7));
-    expect(getGrayscaleXterm("1")).to.contain(xColor(7));
-    expect(getGrayscaleXterm("0a")).to.contain(xColor(7));
-    expect(getGrayscaleXterm("zz")).to.contain(xColor(7));
   });
 
   it("can return a foreground sequence", () => {

@@ -3,19 +3,10 @@
 const { ESCAPE } = require("../definitions");
 
 function getRGBXterm(r, g, b, background = false) {
-  // Ensure valid color.
-  if (r < 0 || r > 5 || g < 0 || g > 5 || b < 0 || b > 5) {
-    // Set to 7 (white) if the input is invalid.
-    return ESCAPE + `[${background ? 4 : 3}8;5;7m`;
-  }
   return ESCAPE + `[${background ? 4 : 3}8;5;${16 + 36 * r + 6 * g + b}m`;
 }
 
 function getGrayscaleXterm(letter, background = false) {
-  if (!/^[a-z]$/.test(letter.trim())) {
-    // Set to 7 (white) if the input is invalid.
-    return ESCAPE + `[${background ? 4 : 3}8;5;7m`;
-  }
   if (letter === "a") {
     return ESCAPE + `[${background ? 4 : 3}8;5;16m`;
   }
