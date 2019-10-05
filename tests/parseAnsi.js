@@ -75,6 +75,24 @@ describe("ansi-parse", () => {
     expect(pstr).to.be("|[rhello |[xworld");
   });
 
+  it("can parse highlight-able color tags", () => {
+    let str = "|!Rhello world";
+    let pstr = parseAnsi(str);
+    expect(pstr).to.be(ANSI.RED + "hello world");
+
+    str = "|rhell|!Go wo|Hrld";
+    pstr = parseAnsi(str);
+    expect(pstr).to.be(
+      ANSI.HILITE +
+        ANSI.RED +
+        "hell" +
+        ANSI.GREEN +
+        "o wo" +
+        ANSI.UNHILITE +
+        "rld"
+    );
+  });
+
   it("correctly parses all defined ANSI tags", () => {
     for (const [tag, code] of ANSI_SEQUENCES.entries()) {
       const parsedTag = parseAnsi(tag);
