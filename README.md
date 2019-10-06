@@ -20,6 +20,8 @@ const coloredString = "|rhello world";
 parse(coloredString); // "\u001b[31mhello world"
 
 strip(coloredString); // "hello world"
+
+parse(coloredString, false) // (Parsed in ANSI-only mode)
 ```
 
 ## Syntax
