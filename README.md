@@ -116,7 +116,7 @@ To set these colors as backgrounds, we use the background notation |[RGB.
 - **|[505** - Bright Magenta Background
 - **|[444** - Light Gray Background
 
-We can also select between 26 different grayscale values using the notation |={letter}, where the letter can by any lowercase letter from a to z.
+We can also select between 26 different grayscale values using the notation |={letter}, where the letter can be any lowercase letter from a to z.
 
 (Examples)
 - **|=a** Black (darkest value)
