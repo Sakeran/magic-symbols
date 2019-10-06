@@ -2,6 +2,12 @@
 
 **magic-symbols** is a color syntax and parser for ANSI and Xterm265 colors, created with MU* and similar text games in mind. The syntax is inspired by and adapted from the implementation used by the [Evennia](https://github.com/evennia/evennia) MUD library.
 
+## Installation
+
+```
+npm install magic-symbols
+```
+
 ## Usage
 
 **magic-symbols** implements two main functions: `parse` and `strip`.
