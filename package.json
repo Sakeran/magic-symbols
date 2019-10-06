@@ -1,13 +1,36 @@
 {
-  "name": "color-parser",
-  "version": "0.0.1",
-  "description": "",
+  "name": "magic-symbols",
+  "version": "1.0.0",
+  "description": "Inline color syntax and parsing for ANSI/Xterm256.",
+  "keywords": [
+    "ansi",
+    "xterm",
+    "xterm256",
+    "color",
+    "syntax",
+    "mu*",
+    "mud",
+    "mush",
+    "mux"
+  ],
   "main": "index.js",
+  "files": [
+    "index.js",
+    "src/parse.js",
+    "src/definitions.js",
+    "src/mappings/ansi.js",
+    "src/mappings/xterm.js",
+    "src/mappings/xtermFallbacks.js"
+  ],
   "scripts": {
     "test": "mocha tests"
   },
   "author": "Alexander Morse",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sakeran/magic-symbols.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "expect.js": "^0.3.1",
