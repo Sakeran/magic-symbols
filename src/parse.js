@@ -23,10 +23,15 @@ function parse(string, xterm = true) {
 
 function strip(string) {
   return string
-    .replace(ANSI_REGEX, "")
-    .replace(XTERM_COLOR_REGEX, "")
-    .replace(XTERM_GRAYSCALE_REGEX, "")
-    .replace(XTERM_BGSUB_REGEX, "");
+    .split(SYNTAX_ESCAPE)
+    .map(ss =>
+      ss
+        .replace(ANSI_REGEX, "")
+        .replace(XTERM_COLOR_REGEX, "")
+        .replace(XTERM_GRAYSCALE_REGEX, "")
+        .replace(XTERM_BGSUB_REGEX, "")
+    )
+    .join(SYNTAX_UNESCAPE);
 }
 
 function parseAnsi(string) {

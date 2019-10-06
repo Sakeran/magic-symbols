@@ -32,4 +32,10 @@ describe("strip", () => {
     const pstr = strip(str);
     expect(pstr).to.be("hello world");
   });
+  
+  it("doesn't strip escaped tags", () => {
+    const str = "||123h||[321el||[rl||=eo w||[=zor||rl||[Gd";
+    const pstr = strip(str);
+    expect(pstr).to.be("|123h|[321el|[rl|=eo w|[=zor|rl|[Gd");
+  })
 });
