@@ -1,6 +1,6 @@
 {
   "name": "magic-symbols",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Inline color syntax and parsing for ANSI/Xterm256.",
   "keywords": [
     "ansi",
