@@ -27,9 +27,7 @@ function getAnsiFallbackRGB(r, g, b, background = false) {
 
   if (r == b && r > g) {
     if (background) return ANSI.BACK_MAGENTA;
-    return r >= 3
-      ? ANSI.HILITE + ANSI.MAGENTA
-      : ANSI.UNHILITE + ANSI.MAGENTA;
+    return r >= 3 ? ANSI.HILITE + ANSI.MAGENTA : ANSI.UNHILITE + ANSI.MAGENTA;
   }
 
   if (g > b) {
@@ -51,37 +49,51 @@ function getAnsiFallbackGrayscale(letter, background) {
   return getAnsiFallbackRGB(gray, gray, gray, background);
 }
 
-// Create a map of all possible xterm values to their fallbacks.
-const XTERM_FALLBACKS = new Map();
+function make_xterm_fallback_sequences(symbols) {
+  // Determine the symbols
+  const fg = symbols.foreground_symbol;
+  const fg_gs = symbols.foreground_grayscale_symbol;
 
-// Grayscale Values
-"abcdefghijklmnopqrstuvwxyz".split("").forEach(val => {
-  XTERM_FALLBACKS.set(`|=${val}`, getAnsiFallbackGrayscale(val));
-  XTERM_FALLBACKS.set(`|[=${val}`, getAnsiFallbackGrayscale(val, true));
-});
+  const bg = symbols.background_symbol;
+  const bg_gs = symbols.background_grayscale_symbol;
 
-// RGB Values
-for (let r = 0; r <= 5; r++) {
-  for (let g = 0; g <= 5; g++) {
-    for (let b = 0; b <= 5; b++) {
-      XTERM_FALLBACKS.set(`|${r}${g}${b}`, getAnsiFallbackRGB(r, g, b));
-      XTERM_FALLBACKS.set(`|[${r}${g}${b}`, getAnsiFallbackRGB(r, g, b, true));
+  // Create a map of all possible xterm values to their fallbacks.
+  const XTERM_FALLBACKS = new Map();
+
+  // Grayscale Values
+  "abcdefghijklmnopqrstuvwxyz".split("").forEach((val) => {
+    XTERM_FALLBACKS.set(`${fg_gs}${val}`, getAnsiFallbackGrayscale(val));
+    XTERM_FALLBACKS.set(`${bg_gs}${val}`, getAnsiFallbackGrayscale(val, true));
+  });
+
+  // RGB Values
+  for (let r = 0; r <= 5; r++) {
+    for (let g = 0; g <= 5; g++) {
+      for (let b = 0; b <= 5; b++) {
+        XTERM_FALLBACKS.set(`${fg}${r}${g}${b}`, getAnsiFallbackRGB(r, g, b));
+        XTERM_FALLBACKS.set(
+          `${bg}${r}${g}${b}`,
+          getAnsiFallbackRGB(r, g, b, true)
+        );
+      }
     }
   }
-}
 
-// Bright ANSI backgrounds
-XTERM_FALLBACKS.set("|[x", ANSI.BACK_BLACK);
-XTERM_FALLBACKS.set("|[r", ANSI.BACK_RED);
-XTERM_FALLBACKS.set("|[g", ANSI.BACK_GREEN);
-XTERM_FALLBACKS.set("|[y", ANSI.BACK_YELLOW);
-XTERM_FALLBACKS.set("|[b", ANSI.BACK_BLUE);
-XTERM_FALLBACKS.set("|[m", ANSI.BACK_MAGENTA);
-XTERM_FALLBACKS.set("|[c", ANSI.BACK_CYAN);
-XTERM_FALLBACKS.set("|[w", ANSI.BACK_WHITE);
+  // Bright ANSI backgrounds
+  XTERM_FALLBACKS.set(`${bg}x`, ANSI.BACK_BLACK);
+  XTERM_FALLBACKS.set(`${bg}r`, ANSI.BACK_RED);
+  XTERM_FALLBACKS.set(`${bg}g`, ANSI.BACK_GREEN);
+  XTERM_FALLBACKS.set(`${bg}y`, ANSI.BACK_YELLOW);
+  XTERM_FALLBACKS.set(`${bg}b`, ANSI.BACK_BLUE);
+  XTERM_FALLBACKS.set(`${bg}m`, ANSI.BACK_MAGENTA);
+  XTERM_FALLBACKS.set(`${bg}c`, ANSI.BACK_CYAN);
+  XTERM_FALLBACKS.set(`${bg}w`, ANSI.BACK_WHITE);
+
+  return XTERM_FALLBACKS;
+}
 
 module.exports = {
   getAnsiFallbackRGB,
   getAnsiFallbackGrayscale,
-  XTERM_FALLBACKS
+  make_xterm_fallback_sequences,
 };

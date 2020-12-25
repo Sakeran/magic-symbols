@@ -1,8 +1,10 @@
 const expect = require("expect.js");
 
-const { parseAnsi } = require("../src/parse");
+const {
+  parseAnsi,
+  ANSI: { SEQUENCES: ANSI_SEQUENCES },
+} = require("../src/parse");
 const { ANSI_DEFINITIONS: ANSI } = require("../src/definitions");
-const { ANSI_SEQUENCES } = require("../src/mappings/ansi");
 
 describe("ansi-parse", () => {
   it("returns an untagged string unmodified", () => {

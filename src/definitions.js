@@ -52,12 +52,7 @@ const ANSI_DEFINITIONS = {
   BACK_WHITE
 };
 
-const SYNTAX_ESCAPE = "||";
-const SYNTAX_UNESCAPE = "|";
-
 module.exports = {
   ESCAPE,
-  ANSI_DEFINITIONS,
-  SYNTAX_ESCAPE,
-  SYNTAX_UNESCAPE
+  ANSI_DEFINITIONS
 };
