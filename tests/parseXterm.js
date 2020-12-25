@@ -1,6 +1,6 @@
 const expect = require("expect.js");
 const { ANSI_DEFINITIONS: ANSI, ESCAPE } = require("../src/definitions");
-const { parseXterm } = require("../src/parse");
+const { parseXterm } = require("../src/init_parser").init_parser({});
 const { getRGBXterm, getGrayscaleXterm } = require("../src/mappings/xterm");
 
 // Test helper for generating an xterm sequence.

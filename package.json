@@ -16,7 +16,7 @@
   "main": "index.js",
   "files": [
     "index.js",
-    "src/parse.js",
+    "src/init_parser.js",
     "src/definitions.js",
     "src/mappings/ansi.js",
     "src/mappings/xterm.js",

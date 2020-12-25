@@ -1,7 +1,7 @@
 const expect = require("expect.js");
 
 const { init_parser } = require("../src/init_parser");
-const { parse } = require("../src/parse");
+const { parse } = init_parser({});
 
 const CUSTOM = {
   foreground_symbol: "~",

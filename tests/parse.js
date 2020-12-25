@@ -1,6 +1,7 @@
 const expect = require("expect.js");
 const { ANSI_DEFINITIONS: ANSI, ESCAPE } = require("../src/definitions");
-const { parse } = require("../src/parse");
+
+const { parse } = require("../src/init_parser").init_parser({});
 
 // Test helper for generating an xterm sequence.
 const xterm = (number, bg = false) => `${ESCAPE}[${bg ? 4 : 3}8;5;${number}m`;

@@ -3,7 +3,7 @@ const expect = require("expect.js");
 const {
   parseAnsi,
   ANSI: { SEQUENCES: ANSI_SEQUENCES },
-} = require("../src/parse");
+} = require("../src/init_parser").init_parser({});
 const { ANSI_DEFINITIONS: ANSI } = require("../src/definitions");
 
 describe("ansi-parse", () => {

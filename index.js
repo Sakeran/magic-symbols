@@ -1,8 +1,9 @@
 "use strict";
 
-const { parse, strip } = require("./src/parse");
+const { init_parser } = require("./src/init_parser");
+const { parse, strip } = init_parser({});
 
 module.exports = {
   parse,
-  strip
+  strip,
 };

@@ -1,6 +1,6 @@
 const expect = require("expect.js");
 
-const { strip } = require("../src/parse");
+const { strip } = require("../src/init_parser").init_parser({});
 
 describe("strip", () => {
   it("returns a string", () => {
