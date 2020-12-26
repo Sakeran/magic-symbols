@@ -1,6 +1,6 @@
 # magic-symbols
 
-**magic-symbols** is a color syntax and parser for ANSI and Xterm256 colors, created with MU* and similar text games in mind. The syntax is inspired by and adapted from the implementation used by the [Evennia](https://github.com/evennia/evennia) MUD library.
+**magic-symbols** is a color syntax and parser for ANSI and Xterm256 colors, created with MU\* and similar text games in mind. The syntax is inspired by and adapted from the implementation used by the [Evennia](https://github.com/evennia/evennia) MUD library.
 
 ## Installation
 
@@ -13,7 +13,7 @@ npm install magic-symbols
 **magic-symbols** implements two main functions: `parse` and `strip`.
 
 ```js
-const { parse, strip } = require('magic-symbols');
+const { parse, strip } = require("magic-symbols");
 
 const coloredString = "|rhello world";
 
@@ -21,10 +21,20 @@ parse(coloredString); // "\u001b[31mhello world"
 
 strip(coloredString); // "hello world"
 
-parse(coloredString, false) // (Parsed in ANSI-only mode)
+parse(coloredString, false); // (Parsed in ANSI-only mode)
+
+// Escape sequences with '||'
+
+const escapedString = "||rhello world";
+
+parse(escapedString); // "|rhello world"
+
+strip(escapedString); // "hello world"
 ```
 
 ## Syntax
+
+Note: See the _Custom Syntax_ section for information on customizing the parser syntax.
 
 ### ANSI Colors
 
@@ -105,6 +115,7 @@ Xterm256 tags come in two main flavors: a 6x6x6 color cube, and a range of grays
 Rather than with letters, we select Xterm colors with the |RGB notation, where R, G, and B are each integers between 0 and 5, and determine the intensity of each color.
 
 (Examples)
+
 - **|500** - Bright Red
 - **|505** - Bright Magenta
 - **|444** - Light Gray
@@ -112,6 +123,7 @@ Rather than with letters, we select Xterm colors with the |RGB notation, where R
 To set these colors as backgrounds, we use the background notation |[RGB.
 
 (Examples)
+
 - **|[500** - Bright Red Background
 - **|[505** - Bright Magenta Background
 - **|[444** - Light Gray Background
@@ -119,6 +131,7 @@ To set these colors as backgrounds, we use the background notation |[RGB.
 We can also select between 26 different grayscale values using the notation |={letter}, where the letter can be any lowercase letter from a to z.
 
 (Examples)
+
 - **|=a** Black (darkest value)
 - **|=m** Gray (medium value)
 - **|=z** White (lightest value)
@@ -126,6 +139,52 @@ We can also select between 26 different grayscale values using the notation |={l
 We can of course set the background to these colors with the |[={letter} notation:
 
 (Examples)
+
 - **|[=a** Black Background (darkest value)
 - **|[=m** Gray Background (medium value)
 - **|[=z** White Background (lightest value)
+
+### Custom Syntax (Advanced)
+
+**magic-symbols** additionally exposes a `setSyntax` method that allows the user to specify the character sequences that mark the start of a particular color tag. There are seven such sequences in total, and each of them must be defined in the syntax definition object. Any missing symbol will be replaced with the default `|`-based equivalent.
+
+While the sequences are not required to be related to one another, note that the parser will replace the `escape_symbol` with the `unescape_symbol`. Therefore, it is usually simplest to have every sequence begin with some common leading character, and use two of that character for your escape (e.g. using `||` to escape `|` ).
+
+Note: To reset the syntax to default, simply pass in an empty object ( `setSyntax({})` ).
+
+```js
+const { parse, setSyntax } = require("magic-symbols");
+
+// Example
+// Set the syntax to one based on the '~' character.
+
+setSyntax({
+  // Foreground Symbol ( Default: "|" )
+  foreground_symbol: "~",
+
+  // Foreground Grayscale Symbol ( Default: "|=" )
+  foreground_grayscale_symbol: "~-",
+
+  // Background Symbol: ( Default: "|[" )
+  background_symbol: "~:",
+
+  // Background Grayscale Symbol ( Default: "|[=" )
+  background_grayscale_symbol: "~:-",
+
+  // No Hilite Symbol ( Default: "|!" )
+  no_hilite_symbol: "~+",
+
+  // Escape Symbol ( Default: "||" )
+  escape_symbol: "~~",
+
+  // Unescape Symbol ( Default: "|" )
+  unescape_symbol: "~",
+});
+
+// 'parse' and 'strip' are updated automatically to use
+// the new syntax
+
+const coloredString = "~rhello world";
+parse(coloredString); // "\u001b[31mhello world"
+strip(coloredString); // "hello world"
+```
