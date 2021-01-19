@@ -1,6 +1,6 @@
 {
   "name": "magic-symbols",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Inline color syntax and parsing for ANSI/Xterm256.",
   "keywords": [
     "ansi",
@@ -17,6 +17,7 @@
   "types": "index.d.ts",
   "files": [
     "index.js",
+    "index.d.ts",
     "src/init_parser.js",
     "src/definitions.js",
     "src/mappings/ansi.js",
