@@ -54,6 +54,39 @@ function init_xterm_mappings(symbols) {
   SEQUENCES.set(`${bg}c`, getRGBXterm(0, 5, 5, true));
   SEQUENCES.set(`${bg}w`, getRGBXterm(5, 5, 5, true));
 
+  // Custom XTERM Aliases
+
+  const custom_aliases = [];
+
+  Object.entries(symbols.xtermAliases).forEach(([alias, value]) => {
+    // Obs - If the given value is valid, then it already exists in SEQUENCES, so
+    // we can simply add a new key with the same value.
+    const originalFg = `${fg}${value}`;
+    const originalBg = `${bg}${value}`;
+
+    if (!SEQUENCES.get(originalFg)) {
+      throw new Error(
+        `XTERM alias ("${alias}" -> "${value}") has an invalid value.`
+      );
+    }
+
+    const newFg = `${fg}${alias}`;
+    const newBg = `${bg}${alias}`;
+
+    // Ensure neither alias is already in SEQUENCES
+    if (SEQUENCES.get(newFg) || SEQUENCES.get(newBg)) {
+      throw new Error(
+        `XTERM alias ("${alias}" -> "${value}") is invalid, because the code is already defined.`
+      );
+    }
+
+    // Add the new sequence
+    SEQUENCES.set(newFg, SEQUENCES.get(originalFg));
+    SEQUENCES.set(newBg, SEQUENCES.get(originalBg));
+
+    custom_aliases.push(escapeRegExp(alias));
+  });
+
   // Create REGEX Matchers
 
   function escapeRegExp(string) {
@@ -69,7 +102,12 @@ function init_xterm_mappings(symbols) {
   const ebg = escapeRegExp(bg);
   const ebg_gs = escapeRegExp(bg_gs);
 
-  const COLOR_REGEX = new RegExp(`(?:${efg}|${ebg})([0-5])([0-5])([0-5])`, "g");
+  const COLOR_REGEX = new RegExp(
+    `(?:${efg}|${ebg})(?:([0-5])([0-5])([0-5])${
+      custom_aliases.length ? "|" + custom_aliases.join("|") : ""
+    })`,
+    "g"
+  );
 
   const GRAYSCALE_REGEX = new RegExp(`(?:${efg_gs}|${ebg_gs})([a-z])`, "g");
 

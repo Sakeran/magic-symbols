@@ -76,6 +76,8 @@ function normalize_mappings(mappings) {
       unescape_symbol: "|",
 
       no_hilite_symbol: "|!",
+
+      xtermAliases: {}
     },
     mappings
   );

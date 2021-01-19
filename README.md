@@ -188,3 +188,38 @@ const coloredString = "~rhello world";
 parse(coloredString); // "\u001b[31mhello world"
 strip(coloredString); // "hello world"
 ```
+
+### Xterm256 Aliases (Advanced)
+
+If a particular Xterm256 color code is commonly used, it may be useful to define a shorthand code for it. For instance, you may wish to map `|534` and `|[534` (pink) to `|p` and `|[p` respectively. To acheive this, the `setSyntax` method also accepts an `xtermAliases` object to specify (alias -> code) pairings.
+
+Note that aliases only affect standard Xterm256 colors, and will not affect Xterm256 Grayscale or basic ANSI colors. Additionally, aliases must be distinct from the default color codes. In particular, the following single-character codes may not be used as aliases: `x, r, g, y, b, m, c, w`, or their uppercased variants.
+
+```js
+const { parse, setSyntax } = require("magic-symbols");
+
+// Example
+// Add three "new" color codes to let us use
+// pink, sea-green, and orange more easily.
+
+setSyntax({
+   // ... custom token syntax ...
+
+  xtermAliases: {
+    // Pink
+    p: "543",
+
+    // Sea Green
+    sg: "141",
+    
+    // Orange
+    o: "410"
+  }
+});
+
+// 'parse' and 'strip' are updated automatically to use
+// the new syntax
+
+const coloredString = "|phello world";
+parse(coloredString); // "\u001b[38;5;218mhello world"
+```

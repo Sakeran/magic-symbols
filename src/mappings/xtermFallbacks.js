@@ -89,6 +89,21 @@ function make_xterm_fallback_sequences(symbols) {
   XTERM_FALLBACKS.set(`${bg}c`, ANSI.BACK_CYAN);
   XTERM_FALLBACKS.set(`${bg}w`, ANSI.BACK_WHITE);
 
+  // Custom XTERM Aliases
+  Object.entries(symbols.xtermAliases).forEach(([alias, value]) => {
+    // Obs - Each entry should have already been error-checked in xterm.js, so
+    // all we need to do is insert the shadowed fallback values.
+    const originalFg = `${fg}${value}`;
+    const originalBg = `${bg}${value}`;
+
+    const newFg = `${fg}${alias}`;
+    const newBg = `${bg}${alias}`;
+
+    // Add the new sequence
+    XTERM_FALLBACKS.set(newFg, XTERM_FALLBACKS.get(originalFg));
+    XTERM_FALLBACKS.set(newBg, XTERM_FALLBACKS.get(originalBg));
+  });
+
   return XTERM_FALLBACKS;
 }
 
