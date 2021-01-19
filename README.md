@@ -193,7 +193,14 @@ strip(coloredString); // "hello world"
 
 If a particular Xterm256 color code is commonly used, it may be useful to define a shorthand code for it. For instance, you may wish to map `|534` and `|[534` (pink) to `|p` and `|[p` respectively. To acheive this, the `setSyntax` method also accepts an `xtermAliases` object to specify (alias -> code) pairings.
 
-Note that aliases only affect standard Xterm256 colors, and will not affect Xterm256 Grayscale or basic ANSI colors. Additionally, aliases must be distinct from the default color codes. In particular, the following single-character codes may not be used as aliases: `x, r, g, y, b, m, c, w`, or their uppercased variants.
+Note that there are some limitations and side-effects to keep in mind when defining aliases.
+
+- Aliases may not overwrite existing color codes. This includes Xterm256 Grayscale and basic ANSI colors such as `|r`.
+- Xterm256 codes and aliases will be parsed before ANSI codes. Therefore it is possible to define codes like `|bg` for blue-green, and the alias will take priority over `|b`.
+- Longer aliases will be considered before shorter ones. For example, `|sa` will be consdered before `|s`, if both are defined. However, keep in mind...
+- Defining multiple codes with common prefixes can lead to unexpected behavior. For example, suppose both `|s` and `|sa` were defined as separate aliases. Because the longer code is parsed first, the text `|salmond` will be parsed as `lmond`, even if this is not the preferred behavior.
+
+In general, it is safest to stick to single-character codes that are distinct from the default ANSI codes. That is, try to avoid codes starting with: `x, r, g, y, b, m, c, w`, or their uppercased variants. If defining a multi-letter code, make sure that no other code is a prefix for it, and that it won't accidentally occur when a shorter code is placed before plain text, like in the 'almond' example. (One way to avoid this might be to add a terminating symbol like `;` or `-` to the custom code; see below for an example.)
 
 ```js
 const { parse, setSyntax } = require("magic-symbols");
@@ -209,8 +216,8 @@ setSyntax({
     // Pink
     p: "543",
 
-    // Sea Green
-    sg: "141",
+    // Sea Green (Note: See above for warning about multi-letter codes)
+    "sg;": "141",
     
     // Orange
     o: "410"

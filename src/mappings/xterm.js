@@ -56,7 +56,7 @@ function init_xterm_mappings(symbols) {
 
   // Custom XTERM Aliases
 
-  const custom_aliases = [];
+  let custom_aliases = [];
 
   Object.entries(symbols.xtermAliases).forEach(([alias, value]) => {
     // Obs - If the given value is valid, then it already exists in SEQUENCES, so
@@ -84,8 +84,13 @@ function init_xterm_mappings(symbols) {
     SEQUENCES.set(newFg, SEQUENCES.get(originalFg));
     SEQUENCES.set(newBg, SEQUENCES.get(originalBg));
 
-    custom_aliases.push(escapeRegExp(alias));
+    custom_aliases.push(alias);
   });
+
+  // Sort custom aliases by length (Longer aliases should be considered first)
+  custom_aliases = custom_aliases
+    .sort((a, b) => b.length - a.length)
+    .map((a) => escapeRegExp(a));
 
   // Create REGEX Matchers
 

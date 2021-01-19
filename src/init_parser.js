@@ -35,7 +35,7 @@ function init_parser(mappings) {
     const handleXterm = xterm ? parseXterm : parseXtermFallback;
     return string
       .split(SYNTAX_ESCAPE)
-      .map((ss) => handleXterm(parseAnsi(ss)))
+      .map((ss) => parseAnsi(handleXterm(ss)))
       .join(SYNTAX_UNESCAPE);
   }
 
