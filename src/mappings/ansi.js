@@ -56,10 +56,9 @@ function init_ansi_mappings(symbols) {
 
   // Create REGEX Matcher
 
-  const REGEX = new RegExp(
-    `(${[...SEQUENCES.keys()].map((k) => escapeRegexp(k)).join("|")})`,
-    "g"
-  );
+  const REGEX = `(?:${[...SEQUENCES.keys()]
+    .map((k) => escapeRegexp(k))
+    .join("|")})`;
 
   return {
     SEQUENCES,

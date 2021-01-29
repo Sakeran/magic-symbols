@@ -16,10 +16,11 @@ function init_parser(mappings) {
   const ANSI = init_ansi_mappings(symbols);
   const XTERM = init_xterm_mappings(symbols);
 
-  // Regular Expressions for parsing escapes/recalls
-  const SYNTAX_ESCAPE_RE = new RegExp(`(${escapeRegExp(SYNTAX_ESCAPE)})`, "g");
-  const SYNTAX_RECALL_RE = new RegExp(
-    `(${escapeRegExp(SYNTAX_RECALL)}[1-9])`,
+  // Compile a "complete" Regular Expression for matching tokens
+  const TOKEN_RE = new RegExp(
+    `(${escapeRegExp(SYNTAX_ESCAPE)}|${escapeRegExp(SYNTAX_RECALL)}[1-9]|${
+      XTERM.COLOR_REGEX
+    }|${XTERM.GRAYSCALE_REGEX}|${XTERM.BGSUB_REGEX}|${ANSI.REGEX})`,
     "g"
   );
 
@@ -85,14 +86,7 @@ function init_parser(mappings) {
   }
 
   function tokenize(string) {
-    return string
-      .split(SYNTAX_ESCAPE_RE)
-      .flatMap((p) => p.split(SYNTAX_RECALL_RE))
-      .flatMap((p) => p.split(XTERM.COLOR_REGEX))
-      .flatMap((p) => p.split(XTERM.GRAYSCALE_REGEX))
-      .flatMap((p) => p.split(XTERM.BGSUB_REGEX))
-      .flatMap((p) => p.split(ANSI.REGEX))
-      .filter((p) => p.length);
+    return string.split(TOKEN_RE).filter((p) => p.length);
   }
 
   return {

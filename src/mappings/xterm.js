@@ -3,7 +3,7 @@
 const { ESCAPE } = require("../definitions");
 const { make_xterm_fallback_sequences } = require("./xtermFallbacks");
 
-const escapeRegExp = require("../escape_re")
+const escapeRegExp = require("../escape_re");
 
 function getRGBXterm(r, g, b, background = false) {
   return ESCAPE + `[${background ? 4 : 3}8;5;${16 + 36 * r + 6 * g + b}m`;
@@ -103,24 +103,16 @@ function init_xterm_mappings(symbols) {
   const ebg = escapeRegExp(bg);
   const ebg_gs = escapeRegExp(bg_gs);
 
-  const COLOR_REGEX = new RegExp(
-    `((?:${efg}|${ebg})(?:[0-5][0-5][0-5]${
-      custom_aliases.length ? "|" + custom_aliases.join("|") : ""
-    }))`,
-    "g"
-  );
+  const COLOR_REGEX = `(?:${efg}|${ebg})(?:[0-5][0-5][0-5]${
+    custom_aliases.length ? "|" + custom_aliases.join("|") : ""
+  })`;
 
-  const GRAYSCALE_REGEX = new RegExp(`((?:${efg_gs}|${ebg_gs})[a-z])`, "g");
+  const GRAYSCALE_REGEX = `(?:${efg_gs}|${ebg_gs})[a-z]`;
 
-  const BGSUB_REGEX = new RegExp(
-    "(" +
-      "xrgybmcw"
-        .split("")
-        .map((val) => `${ebg}${val}`)
-        .join("|") +
-      ")",
-    "g"
-  );
+  const BGSUB_REGEX = `(?:${"xrgybmcw"
+    .split("")
+    .map((val) => `${ebg}${val}`)
+    .join("|")})`;
 
   return {
     SEQUENCES,
