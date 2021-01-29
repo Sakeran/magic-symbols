@@ -132,20 +132,117 @@ describe("parse", () => {
     let pstr = parse(str, false);
     expect(pstr).to.not.contain(xterm(16 + 36 * 5 + 6 * 0 + 0));
     expect(pstr).to.be(ANSI.HILITE + ANSI.RED + "hello world");
-    
+
     str = "|[005hello world";
     pstr = parse(str, false);
     expect(pstr).to.not.contain(xterm(16 + 36 * 0 + 6 * 0 + 5, true));
     expect(pstr).to.be(ANSI.BACK_BLUE + "hello world");
-    
+
     str = "|=fhello world";
     pstr = parse(str, false);
     expect(pstr).to.not.contain(xterm(134 + "f".charCodeAt(0)));
     expect(pstr).to.be(ANSI.HILITE + ANSI.BLACK + "hello world");
-    
+
     str = "|[=yhello world";
     pstr = parse(str, false);
     expect(pstr).to.not.contain(xterm(134 + "y".charCodeAt(0), true));
     expect(pstr).to.be(ANSI.BACK_WHITE + "hello world");
+  });
+
+  it("Can recall the previous color with recall syntax", () => {
+    const str = "|rred |bblue |<1red";
+    const equiv = "|rred |bblue |rred";
+
+    const pstr = parse(str);
+    const equivstr = parse(equiv);
+
+    expect(pstr).to.be(equivstr);
+  });
+
+  it("Can recall the last 9 colors with recall syntax", () => {
+    const base =
+      "|r red" + // 9
+      "|b blue" + // 8
+      "|555 xterm" + // 7
+      "|[432 xterm-bg" + // 6
+      "|=x xterm-gs" + // 5
+      "||r escaped/ignored" + // ignored
+      "|[c xterm-cyan" + // 4
+      "|[R red-bg" + // 3
+      "|333 xterm-gray" + // 2
+      "|[444 xterm-bg-gray" + // 1
+      "|g green"; // Current
+
+    // 9
+    let str = base + "|<9 red";
+    let equiv = base + "|r red";
+
+    let pstr = parse(str);
+    let equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 8
+    str = base + "|<8 blue";
+    equiv = base + "|b blue";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 7
+    str = base + "|<7 xterm";
+    equiv = base + "|555 xterm";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 6
+    str = base + "|<6 xterm-bg";
+    equiv = base + "|[432 xterm-bg";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 5
+    str = base + "|<5 xterm-gs";
+    equiv = base + "|=x xterm-gs";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 4
+    str = base + "|<4 xterm-cyan";
+    equiv = base + "|[c xterm-cyan";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 3
+    str = base + "|<3 red-bg";
+    equiv = base + "|[R red-bg";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 2
+    str = base + "|<2 xterm-gray";
+    equiv = base + "|333 xterm-gray";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    // 1
+    str = base + "|<1 xterm-bg-gray";
+    equiv = base + "|[444 xterm-bg-gray";
+
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
   });
 });

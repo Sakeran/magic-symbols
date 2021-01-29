@@ -33,6 +33,12 @@ describe("strip", () => {
     expect(pstr).to.be("hello world");
   });
   
+  it("strips recall symbols", () => {
+    const str = "|123h|[321e|<1l|[rl|=e|<2o w|[=zo|<9rld";
+    const pstr = strip(str);
+    expect(pstr).to.be("hello world");
+  });
+  
   it("doesn't strip escaped tags", () => {
     const str = "||123h||[321el||[rl||=eo w||[=zor||rl||[Gd";
     const pstr = strip(str);

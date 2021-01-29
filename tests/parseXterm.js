@@ -1,6 +1,6 @@
 const expect = require("expect.js");
 const { ANSI_DEFINITIONS: ANSI, ESCAPE } = require("../src/definitions");
-const { parseXterm } = require("../src/init_parser").init_parser({});
+const { parse } = require("../src/init_parser").init_parser({});
 const { getRGBXterm, getGrayscaleXterm } = require("../src/mappings/xterm");
 
 // Test helper for generating an xterm sequence.
@@ -62,19 +62,19 @@ describe("getGrayscaleXterm", () => {
 describe("xterm-parse", () => {
   it("returns an untagged string unmodified", () => {
     const str = "hello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be("hello world");
   });
 
   it("can parse a single foreground color", () => {
     const str = "|000hello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(xterm(16) + "hello world");
   });
 
   it("can parse multiple colors", () => {
     const str = "|000hel|123lo world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(
       xterm(16) + "hel" + xterm(16 + 36 * 1 + 6 * 2 + 3) + "lo world"
     );
@@ -82,13 +82,13 @@ describe("xterm-parse", () => {
 
   it("can parse background colors", () => {
     const str = "|[000hello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(xterm(16, true) + "hello world");
   });
 
   it("can parse foreground and background colors", () => {
     const str = "|[000h|123ello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(
       xterm(16, true) + "h" + xterm(16 + 36 * 1 + 6 * 2 + 3) + "ello world"
     );
@@ -96,19 +96,19 @@ describe("xterm-parse", () => {
 
   it("can parse greyscale foregrounds (|a)", () => {
     const str = "|=ahello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(xterm(16) + "hello world");
   });
 
   it("can parse greyscale foregrounds (|z)", () => {
     const str = "|=zhello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(xterm(231) + "hello world");
   });
 
   it("can parse greyscale foregrounds (|b-y)", () => {
     let str = "|=bhe|=gllo wo|=yrld";
-    let pstr = parseXterm(str);
+    let pstr = parse(str);
     expect(pstr).to.be(
       xterm(134 + "b".charCodeAt(0)) +
         "he" +
@@ -121,19 +121,19 @@ describe("xterm-parse", () => {
 
   it("can parse greyscale backgrounds (|a)", () => {
     const str = "|[=ahello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(xterm(16, true) + "hello world");
   });
 
   it("can parse greyscale backgrounds (|z)", () => {
     const str = "|[=zhello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(xterm(231, true) + "hello world");
   });
 
   it("can parse greyscale backgrounds (|b-y)", () => {
     let str = "|[=bhe|[=gllo wo|[=yrld";
-    let pstr = parseXterm(str);
+    let pstr = parse(str);
     expect(pstr).to.be(
       xterm(134 + "b".charCodeAt(0), true) +
         "he" +
@@ -146,7 +146,7 @@ describe("xterm-parse", () => {
 
   it("can parse greyscale backgounds and foregrounds", () => {
     const str = "|[=vh|=fel|[=xlo wo|=drld";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(
       xterm(134 + "v".charCodeAt(0), true) +
         "h" +
@@ -161,7 +161,7 @@ describe("xterm-parse", () => {
 
   it("can mix greyscale and colors", () => {
     const str = "|[123h|=hel|[=ylo wo|543rld";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(
       xterm(16 + 36 * 1 + 6 * 2 + 3, true) +
         "h" +
@@ -176,15 +176,9 @@ describe("xterm-parse", () => {
 
   it("converts bright ansi backgrounds to xterm", () => {
     const str = "|[rhello world";
-    const pstr = parseXterm(str);
+    const pstr = parse(str);
     expect(pstr).to.be(xterm(16 + 36 * 5 + 6 * 0 + 0, true) + "hello world");
     expect(pstr).to.not.contain(ANSI.HILITE);
     expect(pstr).to.not.contain(ANSI.RED);
-  });
-
-  it("doesn't convert normal ansi backgrounds to xterm", () => {
-    const str = "|rhello world";
-    const pstr = parseXterm(str);
-    expect(pstr).to.be("|rhello world");
   });
 });

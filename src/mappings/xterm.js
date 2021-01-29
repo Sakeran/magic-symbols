@@ -3,6 +3,8 @@
 const { ESCAPE } = require("../definitions");
 const { make_xterm_fallback_sequences } = require("./xtermFallbacks");
 
+const escapeRegExp = require("../escape_re")
+
 function getRGBXterm(r, g, b, background = false) {
   return ESCAPE + `[${background ? 4 : 3}8;5;${16 + 36 * r + 6 * g + b}m`;
 }
@@ -94,12 +96,6 @@ function init_xterm_mappings(symbols) {
 
   // Create REGEX Matchers
 
-  function escapeRegExp(string) {
-    // Escape special symbols if needed
-    // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-
   // Escaped versions of given symbols
   const efg = escapeRegExp(fg);
   const efg_gs = escapeRegExp(fg_gs);
@@ -108,13 +104,13 @@ function init_xterm_mappings(symbols) {
   const ebg_gs = escapeRegExp(bg_gs);
 
   const COLOR_REGEX = new RegExp(
-    `(?:${efg}|${ebg})(?:([0-5])([0-5])([0-5])${
+    `((?:${efg}|${ebg})(?:[0-5][0-5][0-5]${
       custom_aliases.length ? "|" + custom_aliases.join("|") : ""
-    })`,
+    }))`,
     "g"
   );
 
-  const GRAYSCALE_REGEX = new RegExp(`(?:${efg_gs}|${ebg_gs})([a-z])`, "g");
+  const GRAYSCALE_REGEX = new RegExp(`((?:${efg_gs}|${ebg_gs})[a-z])`, "g");
 
   const BGSUB_REGEX = new RegExp(
     "(" +

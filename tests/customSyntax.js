@@ -12,6 +12,8 @@ const CUSTOM = {
 
   escape_symbol: "~~",
   unescape_symbol: "~",
+
+  recall_symbol: "~-",
 };
 
 const ALIASES = {
@@ -65,5 +67,12 @@ describe("custom-syntax", () => {
     aliased = aliasParse("|rred |321xterm |ppink |=igrayscale");
 
     expect(standard).to.equal(aliased);
+  });
+
+  it("Works with recall symbols", () => {
+    const standard = parse("|rred |bblue |<1red");
+    const custom = customParse("~rred ~bblue ~-1red");
+
+    expect(standard).to.equal(custom);
   });
 });
