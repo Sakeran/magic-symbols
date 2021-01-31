@@ -11,8 +11,9 @@ export interface IMagicSymbolConfig {
 	background_grayscale_symbol?: string;
 	escape_symbol?: string;
 	unescape_symbol?: string;
-  no_hilite_symbol?: string;
-  xtermAliases?: IMagicSymbolXtermAliases
+  	no_hilite_symbol?: string;
+	recall_symbol?: string;
+  	xtermAliases?: IMagicSymbolXtermAliases
 }
 
 export interface IMagicSymbolXtermAliases {
