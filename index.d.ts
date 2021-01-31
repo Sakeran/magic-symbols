@@ -1,6 +1,6 @@
 declare module 'magic-symbols';
 
-declare function parse(string: string, xterm: boolean): string;
+declare function parse(string: string, xterm?: boolean): string;
 
 declare function strip(string: string): string;
 
