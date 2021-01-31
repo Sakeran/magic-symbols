@@ -161,6 +161,7 @@ describe("parse", () => {
 
   it("Can recall the last 9 colors with recall syntax", () => {
     const base =
+      "|345 out-of-range" + // dropped
       "|r red" + // 9
       "|b blue" + // 8
       "|555 xterm" + // 7

@@ -32,6 +32,7 @@ function init_parser(mappings) {
 
   function parse(string, xterm = true) {
     const colorHistory = [];
+    let colorIdx = 0;
 
     return tokenize(string)
       .map((token) => {
@@ -41,7 +42,7 @@ function init_parser(mappings) {
 
         if (RECALL_SEQUENCES.has(token)) {
           token =
-            colorHistory[colorHistory.length - 1 - RECALL_SEQUENCES.get(token)];
+            colorHistory[(10 + colorIdx - RECALL_SEQUENCES.get(token)) % 10];
 
           if (!token) {
             return "";
@@ -49,14 +50,16 @@ function init_parser(mappings) {
         }
 
         if (XTERM.SEQUENCES.has(token)) {
-          colorHistory.push(token);
+          colorIdx = (colorIdx + 1) % 10;
+          colorHistory[colorIdx] = token;
           return xterm
             ? XTERM.SEQUENCES.get(token)
             : XTERM.FALLBACK_SEQUENCES.get(token);
         }
 
         if (ANSI.SEQUENCES.has(token)) {
-          colorHistory.push(token);
+          colorIdx = (colorIdx + 1) % 10;
+          colorHistory[colorIdx] = token;
           return ANSI.SEQUENCES.get(token);
         }
 
