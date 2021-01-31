@@ -1,5 +1,18 @@
 # magic-symbols
 
+## Table of Contents
+- [magic-symbols](#magic-symbols)
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [Syntax](#syntax)
+    + [ANSI Colors](#ansi-colors)
+    + [Xterm256](#xterm256)
+  * [Advanced Syntax](#advanced-syntax)
+    + [Recall Symbols](#recall-symbols)
+    + [Custom Syntax](#custom-syntax)
+    + [Xterm256 Aliases](#xterm256-aliases)
+
+
 **magic-symbols** is a color syntax and parser for ANSI and Xterm256 colors, created with MU\* and similar text games in mind. The syntax is inspired by and adapted from the implementation used by the [Evennia](https://github.com/evennia/evennia) MUD library.
 
 ## Installation
@@ -144,7 +157,26 @@ We can of course set the background to these colors with the |[={letter} notatio
 - **|[=m** Gray Background (medium value)
 - **|[=z** White Background (lightest value)
 
-### Custom Syntax (Advanced)
+## Advanced Syntax
+
+### Recall Symbols
+
+When parsing a string, **magic-symbols** will always "remember" the last 9 color symbols it processed. It is possible to refer to these symbols via the "recall symbol", which is `|<d` by default, where `d` is any integer on the [1-9] interval. For example, `|<1` will resolve to whichever symbol was used one step before the "current" symbol. Likewise, `|<5` will resolve to the symbol used 5 steps before the current symbol. (Note that if the process hasn't seen `(d+1)` symbols yet, the recall symbol will be ignored.)
+
+```js
+// A simple example that resolves to the "previous" color symbol.
+// We want the text in the middle to be blue, before "reverting" to red.
+const coloredString = "|r(this is red) |b(this is blue) |<1(this is also red)";
+const resolvesTo = "|r(this is red) |b(this is blue) |r(this is also red)";
+
+parse(coloredString) === parse(resolvesTo); // true
+```
+
+In most cases it would be better to simply write the explicit color code, but in certain cases (such as string concatenation), we might know that we want to repeat _a_ color, but not _which_ color.
+
+This feature is fairly dumb, and will always resolve to the symbol used exactly `d` steps ago (including resolved recall symbols), whether or not that symbol makes sense in the current position. Additionally, the symbol's behavior of resolving to an empty string (when there is insufficient history for it) can cause side effects if used carelessly.
+
+### Custom Syntax
 
 **magic-symbols** additionally exposes a `setSyntax` method that allows the user to specify the character sequences that mark the start of a particular color tag. There are seven such sequences in total, and each of them must be defined in the syntax definition object. Any missing symbol will be replaced with the default `|`-based equivalent.
 
@@ -179,6 +211,9 @@ setSyntax({
 
   // Unescape Symbol ( Default: "|" )
   unescape_symbol: "~",
+
+  // Recall Symbol ( Default: "|<")
+  recall_symbol: "~<",
 });
 
 // 'parse' and 'strip' are updated automatically to use
@@ -189,7 +224,7 @@ parse(coloredString); // "\u001b[31mhello world"
 strip(coloredString); // "hello world"
 ```
 
-### Xterm256 Aliases (Advanced)
+### Xterm256 Aliases
 
 If a particular Xterm256 color code is commonly used, it may be useful to define a shorthand code for it. For instance, you may wish to map `|534` and `|[534` (pink) to `|p` and `|[p` respectively. To acheive this, the `setSyntax` method also accepts an `xtermAliases` object to specify (alias -> code) pairings.
 
@@ -210,7 +245,7 @@ const { parse, setSyntax } = require("magic-symbols");
 // pink, sea-green, and orange more easily.
 
 setSyntax({
-   // ... custom token syntax ...
+  // ... custom token syntax ...
 
   xtermAliases: {
     // Pink
@@ -218,10 +253,10 @@ setSyntax({
 
     // Sea Green (Note: See above for warning about multi-letter codes)
     "sg;": "141",
-    
+
     // Orange
-    o: "410"
-  }
+    o: "410",
+  },
 });
 
 // 'parse' and 'strip' are updated automatically to use
