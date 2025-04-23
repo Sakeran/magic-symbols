@@ -18,8 +18,7 @@ function init_parser(mappings) {
 
   // Compile a "complete" Regular Expression for matching tokens
   const TOKEN_RE = new RegExp(
-    `(${escapeRegExp(SYNTAX_ESCAPE)}|${escapeRegExp(SYNTAX_RECALL)}[1-9]|${
-      XTERM.COLOR_REGEX
+    `(${escapeRegExp(SYNTAX_ESCAPE)}|${escapeRegExp(SYNTAX_RECALL)}[1-9]|${XTERM.COLOR_REGEX
     }|${XTERM.GRAYSCALE_REGEX}|${XTERM.BGSUB_REGEX}|${ANSI.REGEX})`,
     "g"
   );
@@ -31,41 +30,61 @@ function init_parser(mappings) {
   }
 
   function parse(string, xterm = true) {
-    const colorHistory = [];
-    let colorIdx = 0;
+    // Simple stack implementation - newest items at the end
+    const colorStack = [];
 
-    return tokenize(string)
-      .map((token) => {
-        if (token == SYNTAX_ESCAPE) {
-          return SYNTAX_UNESCAPE;
-        }
+    let result = "";
 
-        if (RECALL_SEQUENCES.has(token)) {
-          token =
-            colorHistory[(10 + colorIdx - RECALL_SEQUENCES.get(token)) % 10];
+    for (const token of tokenize(string)) {
+      if (token === SYNTAX_ESCAPE) {
+        result += SYNTAX_UNESCAPE;
+        continue;
+      }
 
-          if (!token) {
-            return "";
+      if (RECALL_SEQUENCES.has(token)) {
+        const offset = RECALL_SEQUENCES.get(token);
+
+        let recalledToken = "";
+        if (offset <= colorStack.length) {
+          for (let i = 0; i < offset; i++) {
+            colorStack.pop();
           }
+
+          recalledToken = colorStack[colorStack.length - 1] || "";
+        } else {
+          // If recall token is called an goes out of range,
+          // attempt to use the first color in the stack.
+          recalledToken = colorStack[0] || "";
+          colorStack.length = 0;
         }
 
-        if (XTERM.SEQUENCES.has(token)) {
-          colorIdx = (colorIdx + 1) % 10;
-          colorHistory[colorIdx] = token;
-          return xterm
-            ? XTERM.SEQUENCES.get(token)
-            : XTERM.FALLBACK_SEQUENCES.get(token);
+        if (XTERM.SEQUENCES.has(recalledToken)) {
+          result += xterm
+            ? XTERM.SEQUENCES.get(recalledToken)
+            : XTERM.FALLBACK_SEQUENCES.get(recalledToken);
+        } else if (ANSI.SEQUENCES.has(recalledToken)) {
+          result += ANSI.SEQUENCES.get(recalledToken);
         }
+        
+        continue;
+      }
 
-        if (ANSI.SEQUENCES.has(token)) {
-          colorIdx = (colorIdx + 1) % 10;
-          colorHistory[colorIdx] = token;
-          return ANSI.SEQUENCES.get(token);
-        }
+      if (XTERM.SEQUENCES.has(token)) {
+        colorStack.push(token);
 
-        return token;
-      })
-      .join("");
+        result += xterm
+          ? XTERM.SEQUENCES.get(token)
+          : XTERM.FALLBACK_SEQUENCES.get(token);
+      } else if (ANSI.SEQUENCES.has(token)) {
+        colorStack.push(token);
+
+        result += ANSI.SEQUENCES.get(token);
+      } else {
+        result += token;
+      }
+    }
+
+    return result;
   }
 
   function strip(string) {
