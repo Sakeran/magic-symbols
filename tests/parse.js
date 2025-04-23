@@ -156,7 +156,27 @@ describe("parse", () => {
     const pstr = parse(str);
     const equivstr = parse(equiv);
 
-    expect(pstr).to.be(equivstr);
+    expect(pstr).to.eql(equivstr);
+  });
+
+  it("Returns first color when recall syntax is out of range", () => {
+    const str = "|rred |bblue |<8red";
+    const equiv = "|rred |bblue |rred";
+
+    const pstr = parse(str);
+    const equivstr = parse(equiv);
+
+    expect(pstr).to.eql(equivstr);
+  });
+
+  it("Returns empty string if no colors are in the stack and recall token is used ", () => {
+    const str = "This has no colors|<2";
+    const equiv = "This has no colors";
+
+    const pstr = parse(str);
+    const equivstr = parse(equiv);
+
+    expect(pstr).to.eql(equivstr);
   });
 
   it("Can recall the last 9 colors with recall syntax", () => {
@@ -242,6 +262,54 @@ describe("parse", () => {
     str = base + "|<1 xterm-bg-gray";
     equiv = base + "|[444 xterm-bg-gray";
 
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+  });
+
+  it("Can recall with multiple tokens with ansi", () => {
+    const base =
+      "|r bold-red" +
+      "|R red" +
+      "|y bold-yellow" + // |<9
+      "|Y yellow" + // |<8
+      "|g bold-green" + // |<7
+      "|G green" + // |<6
+      "|b bold-blue" + // |<5
+      "|B blue" + // |<4
+      "|c bold-cyan" + // |<3
+      "|C cyan" + // |<2
+      "|m bold-magenta" + // |<1
+      "|M magenta"; // Current
+
+    let str, equiv, pstr, equivstr;
+
+    str = base + "|<3|<3|<2 yellow";
+    equiv = base + "|c|G|Y yellow";
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    str = base + "|<2|<3|<3 yellow";
+    equiv = base + "|C|b|Y yellow";
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    str = base + "|<3|<2|<3 yellow";
+    equiv = base + "|c|b|Y yellow";
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    str = base + "|<1|<1|<1|<1|<1|<1|<1|<1|<1 bold-yellow";
+    equiv = base + "|m|C|c|B|b|G|g|Y|y bold-yellow";
+    pstr = parse(str);
+    equivstr = parse(equiv);
+    expect(pstr).to.eql(equivstr);
+
+    str = base + "|<2 cyan |<3 Blue |<3 yellow";
+    equiv = base + "|C cyan |b Blue |Y yellow";
     pstr = parse(str);
     equivstr = parse(equiv);
     expect(pstr).to.eql(equivstr);
