@@ -161,7 +161,7 @@ We can of course set the background to these colors with the |[={letter} notatio
 
 ### Recall Symbols
 
-When parsing a string, **magic-symbols** will always "remember" the last 9 color symbols it processed. It is possible to refer to these symbols via the "recall symbol", which is `|<d` by default, where `d` is any integer on the [1-9] interval. For example, `|<1` will resolve to whichever symbol was used one step before the "current" symbol. Likewise, `|<5` will resolve to the symbol used 5 steps before the current symbol. (Note that if the process hasn't seen `(d+1)` symbols yet, the recall symbol will be ignored.)
+When parsing a string, **magic-symbols** will "remember" the color symbols it processed. It is possible to refer to these symbols via the "recall symbol", which is `|<d` by default, where `d` is any integer on the [1-9] interval. For example, `|<1` will resolve to whichever symbol was used one step before the "current" symbol. Likewise, `|<5` will resolve to the symbol used 5 steps before the current symbol. You can also change recall symbols like `|<1|<2|<3` that would yield the same result at `|<6`. (Note that if the process hasn't seen `(d+1)` symbols yet, the recall symbol will be ignored.)
 
 ```js
 // A simple example that resolves to the "previous" color symbol.
